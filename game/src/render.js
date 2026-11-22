@@ -8,8 +8,10 @@ import { MAX_LIFE, totalGuard } from './state.js';
 // never text alone, so each suit reads at thumbnail size.
 export function suitIcon(suitKey, size = 22) {
   const color = SUITS[suitKey].color;
+  // Flame carries a bright inner core, so its silhouette never reads as the
+  // Tide droplet: flame = outer tongue + pale heart, tide = solid droplet.
   const shapes = {
-    flame: `<path d="M12 2 C12 2 5 8 5 13 A7 7 0 0 0 19 13 C19 8 12 2 12 2 Z M12 11 C10 13 9 14.5 9 16 A3 3 0 0 0 15 16 C15 14.5 14 13 12 11 Z"/>`,
+    flame: `<path d="M12 1 C15 4 19 7 19 12.5 A7 7 0 0 1 5 12.5 C5 10 6.5 8.5 8 7 C8.5 8.5 9.5 9.5 11 9.5 C10.5 6.5 11 3.5 12 1 Z"/><path d="M12 11 C10.5 12.8 9.5 14 9.5 15.8 A2.5 2.5 0 0 0 14.5 15.8 C14.5 14 13.5 12.8 12 11 Z" fill="#ffd98a"/>`,
     gale: `<path d="M20 4 C10 4 4 10 4 20 C14 20 20 14 20 4 Z M8 16 C11 13 14 10 17 7"/>`,
     tide: `<path d="M12 2 C12 2 5 11 5 15 A7 7 0 0 0 19 15 C19 11 12 2 12 2 Z"/>`,
     stone: `<path d="M12 2 L20 12 L12 22 L4 12 Z M12 7 L16 12 L12 17 L8 12 Z"/>`,
@@ -44,7 +46,7 @@ function guardRow(guards, owner) {
 
 function cardHtml(card, index, { selected = false, playable = true, faceDown = false } = {}) {
   if (faceDown) {
-    return `<div class="card back" data-index="${index}"><div class="card-back-mark">♨</div></div>`;
+    return `<div class="card back" data-index="${index}"><div class="card-back-mark">${suitIcon('flame', 24)}</div></div>`;
   }
   const suit = SUITS[card.suit];
   const cls = [
@@ -141,7 +143,7 @@ function playScreen(state) {
     <div class="side-row ai-row">
       <div class="portrait regent">${suitIcon('flame', 40)}</div>
       <div class="side-info">
-        <div class="side-name">Ashen Regent <span class="ai-hand-count">🂠 ${a.hand.length} cards</span></div>
+        <div class="side-name">Ashen Regent <span class="ai-hand-count">· ${a.hand.length} cards in hand</span></div>
         ${lifeBar(a.life, 'Regent')}
         ${emberPips(a.embers)}
         ${guardRow(a.guards, 'ai')}
